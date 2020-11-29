@@ -15,7 +15,7 @@ def dbdump(s):
     if len(data.split('\n')) > 3:
         print_loading('getting ip database...')
         page_number = int(re.findall(r'\ \d+/(\d+)\ [\-]+', data)[0])
-        for page in range(page_number):
+        for page in range(page_number + 1):
             packet = command_packet('ebaltop ' + str(page))
             s.sendall(packet)
             data = parse_string(s.recv(65500).decode('utf-8', errors='ignore'))

@@ -15,6 +15,8 @@ from mcstatus import *
 
 
 from core.commands.dbdump import *
+from core.commands.usersdump import *
+
 from core.utils.print_utils import *
 from core.utils.packet_utils import *
 
@@ -23,6 +25,7 @@ colorama.init()
 help = {
     ':help': 'show this menu',
     ':dbdump': 'dump ip database',
+    ':userdump': 'dump user database',
     ':clear': 'clear the console screen',
     ':logout': 'terminate session',
 }
@@ -200,7 +203,10 @@ if args.host and args.port and args.exec == True:
 
             elif command == ':dbdump':
                 dbdump(s)
-
+            
+            elif command == ':userdump':
+                userdump(s)
+            
             elif command == ':clear':
                 clear_console()
 
