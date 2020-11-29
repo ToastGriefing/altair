@@ -22,7 +22,8 @@ colorama.init()
 help = {
     ':help': 'show this menu',
     ':dbdump': 'dump ip database',
-    ':clear': 'clear the console screen'
+    ':clear': 'clear the console screen',
+    ':logout': 'terminate session',
 }
 
 print_banner()
@@ -44,8 +45,6 @@ exec.add_argument('-x', '--exec', help='start altair rcon shell', dest='exec', a
 brute = parser.add_argument_group('BRUTING')
 brute.add_argument('-w', '--wordlist', help='list of passwords', dest='bpath', metavar='')
 brute.add_argument('-v', '--verbose', help='verbose mode', dest='verbose', action='store_true')
-
-
 
 
 args = parser.parse_args()
@@ -75,10 +74,10 @@ if args.bpath:
         packet = login_packet(payload)
         s.sendall(packet)
         data = s.recv(1024)
-        if data == b'\n\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00':
+        if data == LOGIN_SUCCESS:
             print_success(f'password found after {t} tries: {payload}')
             sys.exit(0)
-        else:
+        elif data == LOGIN_FAILED:
             if args.verbose == True:
                 print_failed(f'invalid password: {payload}')
         t += 1
@@ -161,8 +160,13 @@ if args.host and args.port and args.exec == True:
                 password = password[:-1]
                 proxy_string[len(password)] = " "
             else:
-                proxy_string[len(password)] = "#"
-                password += c.decode()
+                try:
+                    password += c.decode()
+                    proxy_string[len(password)] = "*"
+                except:
+                    pass
+
+
         sys.stdout.write('\n')
         packet = login_packet(password)
 
@@ -196,10 +200,18 @@ if args.host and args.port and args.exec == True:
 
             elif command == ':dbdump':
                 dbdump(s)
+
+            elif command == ':clear':
+                clear_console()
+
+            elif command == ':logout':
+                s.close()
+                sys.exit()
             else:
                 packet = command_packet(complete_command)
                 s.sendall(packet)
                 print(parse_string(s.recv(65500).decode('utf-8', errors='ignore')))
+
 
         except IndexError:
             pass

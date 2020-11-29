@@ -51,6 +51,10 @@ def print_banner():
 
     print(random.choice(banners))
 
+def clear_console():
+    print("\x1b[2J")
+    print_banner()
+
 def print_success(msg):
     print(f'{Fore.GREEN}[+]{Fore.WHITE} {msg}')
 
