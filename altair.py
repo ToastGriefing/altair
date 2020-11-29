@@ -4,6 +4,7 @@ import hashlib
 import socket
 import struct
 import msvcrt
+import string
 import uuid
 import time
 import sys
@@ -116,6 +117,8 @@ if args.path:
 
     for _host, ports in ips.items():
         for port in ports:
+            if args.verbose == True:
+                print_loading(f'trying {Fore.CYAN}{_host}:{port}')
             try:
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 s.settimeout(timeout)       
@@ -160,11 +163,8 @@ if args.host and args.port and args.exec == True:
                 password = password[:-1]
                 proxy_string[len(password)] = " "
             else:
-                try:
-                    password += c.decode()
-                    proxy_string[len(password)] = "*"
-                except:
-                    pass
+                password += c.decode()
+                proxy_string[len(password)] = "*"
 
 
         sys.stdout.write('\n')

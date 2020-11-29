@@ -47,8 +47,6 @@ def print_banner():
 
     ]
 
-
-
     print(random.choice(banners))
 
 def clear_console():
